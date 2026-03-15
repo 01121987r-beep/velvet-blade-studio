@@ -136,13 +136,64 @@ function buildRangeMarkup(rule = {}) {
   `;
 }
 
+function buildDefaultDayRanges(rules = []) {
+  const defaults = [
+    { label: 'Fascia mattina', start_time: '', end_time: '' },
+    { label: 'Fascia pomeriggio', start_time: '', end_time: '' }
+  ];
+
+  if (!rules.length) return defaults;
+
+  const normalized = defaults.map((item) => ({ ...item }));
+
+  rules.forEach((rule) => {
+    const label = `${rule.label || ''}`.toLowerCase();
+    if (label.includes('mattina')) {
+      normalized[0] = {
+        label: 'Fascia mattina',
+        start_time: rule.start_time || '',
+        end_time: rule.end_time || ''
+      };
+      return;
+    }
+
+    if (label.includes('pomeriggio')) {
+      normalized[1] = {
+        label: 'Fascia pomeriggio',
+        start_time: rule.start_time || '',
+        end_time: rule.end_time || ''
+      };
+      return;
+    }
+
+    if (!normalized[0].start_time && !normalized[0].end_time) {
+      normalized[0] = {
+        label: 'Fascia mattina',
+        start_time: rule.start_time || '',
+        end_time: rule.end_time || ''
+      };
+      return;
+    }
+
+    if (!normalized[1].start_time && !normalized[1].end_time) {
+      normalized[1] = {
+        label: 'Fascia pomeriggio',
+        start_time: rule.start_time || '',
+        end_time: rule.end_time || ''
+      };
+    }
+  });
+
+  return normalized;
+}
+
 function renderAvailabilityEditor() {
   const grouped = weekdays.map((day) => {
     const rules = availabilityPayload.rules.filter((rule) => Number(rule.weekday) === day.value);
     return {
       ...day,
       active: rules.length > 0,
-      ranges: rules.length ? rules : [{ label: 'Fascia mattina', start_time: '', end_time: '' }, { label: 'Fascia pomeriggio', start_time: '', end_time: '' }]
+      ranges: buildDefaultDayRanges(rules)
     };
   });
 
