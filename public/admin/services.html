@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velvet Blade Studio | Gestione servizi</title>
+  <link rel="stylesheet" href="/admin/styles.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-shell">
+    <main class="admin-dashboard" data-admin-services-page>
+      <header class="admin-header">
+        <div>
+          <span class="section-kicker">Admin services</span>
+          <h1>Gestione servizi</h1>
+          <p>CRUD servizi in una pagina dedicata.</p>
+        </div>
+        <div class="admin-header-actions">
+          <div class="admin-header-nav">
+            <a href="/admin" class="btn btn-secondary">Dashboard</a>
+          </div>
+          <div class="admin-header-account">
+            <button class="btn btn-secondary" type="button" data-change-password>Cambia password</button>
+            <button class="btn btn-primary" type="button" data-logout>Esci</button>
+          </div>
+        </div>
+      </header>
+      <section class="card-surface">
+        <form class="admin-form" data-service-form>
+          <input type="hidden" name="id" />
+          <label><span>Nome servizio</span><input type="text" name="name" required /></label>
+          <div class="inline-fields">
+            <label><span>Prezzo</span><input type="number" name="price" min="1" step="0.5" required /></label>
+            <label><span>Durata (min)</span><input type="number" name="duration_minutes" min="15" step="15" required /></label>
+          </div>
+          <label><span>Descrizione</span><textarea name="description" rows="3" required></textarea></label>
+          <div class="inline-fields">
+            <label><span>Icona</span><input type="text" name="icon" required /></label>
+            <label><span>Ordine</span><input type="number" name="sort_order" min="0" required /></label>
+          </div>
+          <label><span>Immagine / icona URL</span><input type="url" name="image_url" required /></label>
+          <label class="inline-checkbox"><input type="checkbox" name="featured_home" checked /><span>Servizio in evidenza</span></label>
+          <label class="inline-checkbox"><input type="checkbox" name="active" checked /><span>Servizio attivo</span></label>
+          <div class="inline-actions">
+            <button class="btn btn-primary" type="submit">Salva servizio</button>
+            <button class="btn btn-secondary" type="button" data-reset-service>Reset</button>
+          </div>
+        </form>
+        <div class="table-wrap"><table class="admin-table"><thead><tr><th>Servizio</th><th>Prezzo</th><th>Durata</th><th>Stato</th><th></th></tr></thead><tbody data-services-table></tbody></table></div>
+      </section>
+    </main>
+  </div>
+  <script src="/admin/services.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "appId": "it.velvetblade.booking",
+  "appName": "Velvet Blade Studio",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https"
+  }
+}

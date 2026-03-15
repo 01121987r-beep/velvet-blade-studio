@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velvet Blade Studio</title>
+  <link rel="stylesheet" href="/client/styles.css">
+</head>
+<body>
+  <section id="intro-splash" class="intro-splash" aria-hidden="true">
+    <div class="intro-splash-inner">
+      <div class="intro-logo-wrap">
+        <img id="intro-logo" class="intro-logo" src="/client/assets/logo-barber.svg" alt="Logo barber shop">
+      </div>
+      <p class="intro-kicker">Barber booking</p>
+      <h1 id="intro-shop-name" class="intro-title">Velvet Blade Studio</h1>
+    </div>
+  </section>
+
+  <main class="app-shell">
+    <header class="hero-card">
+      <img id="shop-logo" class="shop-logo" src="/client/assets/logo-barber.svg" alt="Logo barber shop">
+      <div>
+        <p class="eyebrow">Prenotazione barber</p>
+        <h1 id="shop-name">Velvet Blade Studio</h1>
+        <p id="shop-tagline" class="muted">Prenotazioni rapide per grooming premium</p>
+      </div>
+    </header>
+
+    <section class="panel" id="booking-panel">
+      <section class="step-view" data-step-view="1">
+        <div class="section-head">
+          <button id="my-bookings-trigger" class="primary-btn full-width-btn">Le mie prenotazioni</button>
+        </div>
+        <h2 class="section-title">Scegli il servizio</h2>
+        <div id="services-grid" class="services-grid"></div>
+      </section>
+
+      <section class="step-view is-hidden" data-step-view="2">
+        <div class="section-head">
+          <button class="ghost-btn" data-back-step="1">Indietro</button>
+        </div>
+        <h2 class="section-title">Scegli lo specialista</h2>
+        <div id="specialists-grid" class="specialists-grid"></div>
+      </section>
+
+      <section class="step-view is-hidden" data-step-view="3">
+        <div class="section-head">
+          <button class="ghost-btn" data-back-step="2">Indietro</button>
+        </div>
+        <h2 class="section-title">Giorno e orario</h2>
+        <div id="days-grid" class="day-grid"></div>
+        <div id="slots-grid" class="slots-grid"></div>
+      </section>
+
+      <section class="step-view is-hidden" data-step-view="4">
+        <div class="section-head">
+          <button class="ghost-btn" data-back-step="3">Indietro</button>
+        </div>
+        <h2 class="section-title">Riepilogo prenotazione</h2>
+        <div class="summary-card" id="summary-card"></div>
+        <form id="booking-form" class="booking-form">
+          <label>
+            Nome e cognome
+            <input name="customer_name" type="text" required>
+          </label>
+          <label>
+            Telefono
+            <input name="customer_phone" type="tel" required>
+          </label>
+          <div class="action-row">
+            <button type="submit" class="primary-btn">Conferma prenotazione</button>
+          </div>
+        </form>
+      </section>
+    </section>
+
+    <section class="panel success-panel is-hidden" id="success-panel">
+      <h2 class="section-title">Prenotazione confermata</h2>
+      <p class="muted success-copy">La tua prenotazione è stata registrata con successo.</p>
+      <div id="success-summary" class="summary-card"></div>
+      <div class="stack-actions">
+        <button id="go-to-bookings" class="primary-btn">Le mie prenotazioni</button>
+        <button id="reset-flow" class="ghost-btn">Menù</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="bookings-dialog" class="modal">
+    <div class="modal-card">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Area cliente</span>
+          <h2>Le mie prenotazioni</h2>
+        </div>
+        <button id="close-bookings" class="ghost-btn">Chiudi</button>
+      </div>
+      <p id="bookings-status" class="form-status"></p>
+      <div id="bookings-list" class="bookings-list"></div>
+      <section id="bookings-success" class="manage-success-panel is-hidden">
+        <h3>Prenotazione aggiornata</h3>
+        <p id="bookings-success-copy" class="muted"></p>
+        <div class="stack-actions">
+          <button id="bookings-success-close" class="primary-btn" type="button">Continua</button>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog id="cancel-dialog" class="modal">
+    <div class="modal-card confirm-card">
+      <h2 class="section-title">Sei sicuro di voler annullare?</h2>
+      <p class="muted confirm-copy">L'appuntamento verrà rimosso dalla tua area cliente.</p>
+      <div class="action-row confirm-actions">
+        <button id="cancel-confirm-yes" class="primary-btn" type="button">Sì</button>
+        <button id="cancel-confirm-no" class="ghost-btn" type="button">No</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/client/app.js" type="module"></script>
+</body>
+</html>

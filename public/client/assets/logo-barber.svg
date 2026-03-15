@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Velvet Blade Studio</title>
+  <desc id="desc">Monogramma barber old school rosso blu bianco</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#173155"/>
+      <stop offset="100%" stop-color="#0d1b2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="url(#bg)"/>
+  <rect x="34" y="34" width="188" height="188" rx="38" fill="none" stroke="#eef3fb" stroke-opacity="0.18" stroke-width="6"/>
+  <path d="M82 64h30l20 38 20-38h30l-35 60 39 68h-30l-24-45-24 45H78l39-68z" fill="#f4f7fb"/>
+  <rect x="60" y="176" width="136" height="18" rx="9" fill="#c92f3c"/>
+  <rect x="86" y="196" width="84" height="10" rx="5" fill="#315d9f"/>
+</svg>
