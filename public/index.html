@@ -86,6 +86,12 @@
     </section>
   </main>
 
+  <nav class="bottom-nav" aria-label="Navigazione veloce">
+    <button id="footer-menu" class="bottom-nav-item is-active" type="button">Menù</button>
+    <button id="footer-specialists" class="bottom-nav-item" type="button">Specialisti</button>
+    <button id="footer-location" class="bottom-nav-item" type="button">Dove siamo</button>
+  </nav>
+
   <dialog id="bookings-dialog" class="modal">
     <div class="modal-card">
       <div class="section-head">
@@ -93,7 +99,7 @@
           <span class="eyebrow">Area cliente</span>
           <h2>Le mie prenotazioni</h2>
         </div>
-        <button id="close-bookings" class="ghost-btn">Chiudi</button>
+        <button id="close-bookings" class="close-icon-btn" aria-label="Chiudi">X</button>
       </div>
       <p id="bookings-status" class="form-status"></p>
       <div id="bookings-list" class="bookings-list"></div>
@@ -114,6 +120,39 @@
       <div class="action-row confirm-actions">
         <button id="cancel-confirm-yes" class="primary-btn" type="button">Sì</button>
         <button id="cancel-confirm-no" class="ghost-btn" type="button">No</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="specialists-dialog" class="modal">
+    <div class="modal-card">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Il team</span>
+          <h2>I nostri specialisti</h2>
+        </div>
+        <button id="close-specialists" class="close-icon-btn" aria-label="Chiudi">X</button>
+      </div>
+      <p id="specialists-directory-status" class="form-status"></p>
+      <div id="specialists-directory-list" class="specialists-directory-list"></div>
+    </div>
+  </dialog>
+
+  <dialog id="location-dialog" class="modal">
+    <div class="modal-card">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Dove siamo</span>
+          <h2>Velvet Blade Studio</h2>
+        </div>
+        <button id="close-location" class="close-icon-btn" aria-label="Chiudi">X</button>
+      </div>
+      <div class="location-card">
+        <iframe id="location-map" class="location-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="" title="Mappa Velvet Blade Studio"></iframe>
+        <div class="location-copy">
+          <p id="location-address" class="location-address"></p>
+          <p id="location-opening" class="muted"></p>
+        </div>
       </div>
     </div>
   </dialog>

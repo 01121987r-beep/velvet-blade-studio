@@ -2,6 +2,7 @@ const state = {
   settings: null,
   services: [],
   specialists: [],
+  teamSpecialists: [],
   availability: [],
   selectedService: null,
   selectedSpecialist: null,
@@ -40,6 +41,9 @@ const refs = {
   successSummary: document.querySelector('#success-summary'),
   resetFlow: document.querySelector('#reset-flow'),
   goToBookings: document.querySelector('#go-to-bookings'),
+  footerMenu: document.querySelector('#footer-menu'),
+  footerSpecialists: document.querySelector('#footer-specialists'),
+  footerLocation: document.querySelector('#footer-location'),
   myBookingsTrigger: document.querySelector('#my-bookings-trigger'),
   bookingsDialog: document.querySelector('#bookings-dialog'),
   closeBookings: document.querySelector('#close-bookings'),
@@ -48,6 +52,15 @@ const refs = {
   bookingsSuccess: document.querySelector('#bookings-success'),
   bookingsSuccessCopy: document.querySelector('#bookings-success-copy'),
   bookingsSuccessClose: document.querySelector('#bookings-success-close'),
+  specialistsDialog: document.querySelector('#specialists-dialog'),
+  closeSpecialists: document.querySelector('#close-specialists'),
+  specialistsDirectoryStatus: document.querySelector('#specialists-directory-status'),
+  specialistsDirectoryList: document.querySelector('#specialists-directory-list'),
+  locationDialog: document.querySelector('#location-dialog'),
+  closeLocation: document.querySelector('#close-location'),
+  locationMap: document.querySelector('#location-map'),
+  locationAddress: document.querySelector('#location-address'),
+  locationOpening: document.querySelector('#location-opening'),
   cancelDialog: document.querySelector('#cancel-dialog'),
   cancelConfirmYes: document.querySelector('#cancel-confirm-yes'),
   cancelConfirmNo: document.querySelector('#cancel-confirm-no')
@@ -125,6 +138,15 @@ function renderBootstrap() {
   };
   refs.shopName.textContent = state.settings.shop_name;
   refs.shopTagline.textContent = state.settings.tagline;
+  if (refs.locationMap) {
+    refs.locationMap.src = `https://maps.google.com/maps?q=${encodeURIComponent(`${state.settings.address} ${state.settings.city}`)}&z=15&output=embed`;
+  }
+  if (refs.locationAddress) {
+    refs.locationAddress.textContent = `${state.settings.address}, ${state.settings.city}`;
+  }
+  if (refs.locationOpening) {
+    refs.locationOpening.textContent = state.settings.opening_note || '';
+  }
   if (refs.introLogo) {
     refs.introLogo.src = state.settings.logo_url || LOCAL_LOGO_SRC;
     refs.introLogo.onerror = () => {
@@ -135,6 +157,28 @@ function renderBootstrap() {
   if (refs.introShopName) {
     refs.introShopName.textContent = state.settings.shop_name;
   }
+}
+
+function renderTeamSpecialists() {
+  if (!state.teamSpecialists.length) {
+    refs.specialistsDirectoryList.innerHTML = '';
+    refs.specialistsDirectoryStatus.textContent = 'Nessuno specialista disponibile al momento.';
+    refs.specialistsDirectoryStatus.className = 'form-status is-error';
+    return;
+  }
+
+  refs.specialistsDirectoryStatus.textContent = '';
+  refs.specialistsDirectoryStatus.className = 'form-status';
+  refs.specialistsDirectoryList.innerHTML = state.teamSpecialists.map((specialist) => `
+    <article class="specialist-directory-card">
+      <img class="specialist-directory-photo" src="${specialist.photo_url}" alt="${specialist.name}">
+      <div class="specialist-directory-copy">
+        <h3>${specialist.name}</h3>
+        <p class="specialist-meta">${specialist.role}</p>
+        <p class="muted">${specialist.bio}</p>
+      </div>
+    </article>
+  `).join('');
 }
 
 function renderServices(error = '') {
@@ -151,11 +195,13 @@ function renderServices(error = '') {
   services.forEach((service) => {
     const button = document.createElement('button');
     button.className = `service-card${state.selectedService?.id === service.id ? ' is-active' : ''}`;
+    button.style.setProperty('--service-photo', `url("${service.image_url}")`);
     button.innerHTML = `
-      <span class="service-icon">${renderServiceIcon(service)}</span>
-      <h3>${service.name}</h3>
-      <p class="service-meta">${service.duration_minutes} min · € ${service.price}</p>
-      <p class="muted">${service.description}</p>
+      <div class="service-card-copy">
+        <h3>${service.name}</h3>
+        <p class="service-meta">${service.duration_minutes} min · € ${service.price}</p>
+        <p class="muted">${service.description}</p>
+      </div>
     `;
     button.addEventListener('click', async () => {
       state.selectedService = service;
@@ -369,7 +415,6 @@ function renderBookings() {
       <article class="booking-card manage-booking-card">
         <div class="manage-booking-top">
           <div>
-            <span class="eyebrow">Prenotazione salvata</span>
             <h3>${booking.service_name}</h3>
           </div>
           <span class="booking-status ${booking.status}">${booking.status_label}</span>
@@ -530,12 +575,37 @@ async function loadBootstrap() {
   const data = await api('/api/client/bootstrap');
   state.settings = data.settings;
   state.services = Array.isArray(data.services) ? data.services : [];
+  state.teamSpecialists = Array.isArray(data.specialists) ? data.specialists : [];
   renderBootstrap();
   if (!state.services.length) {
     renderServices('Nessun servizio restituito dal backend.');
     return;
   }
   renderServices();
+}
+
+async function loadTeamSpecialists() {
+  try {
+    const data = await api('/api/client/specialists');
+    state.teamSpecialists = Array.isArray(data.specialists) ? data.specialists : [];
+  } catch {
+    const specialistMap = new Map();
+    for (const service of state.services) {
+      try {
+        const data = await api(`/api/client/services/${service.id}/specialists`);
+        const specialists = Array.isArray(data.specialists) ? data.specialists : [];
+        for (const specialist of specialists) {
+          if (!specialistMap.has(specialist.id)) {
+            specialistMap.set(specialist.id, specialist);
+          }
+        }
+      } catch {
+        // keep collecting from remaining services
+      }
+    }
+    state.teamSpecialists = Array.from(specialistMap.values()).sort((a, b) => a.name.localeCompare(b.name, 'it'));
+  }
+  renderTeamSpecialists();
 }
 
 async function loadSpecialists() {
@@ -630,6 +700,9 @@ function resetFlow() {
   renderAvailability();
   renderSummary();
   setStep(1);
+  refs.footerMenu?.classList.add('is-active');
+  refs.footerSpecialists?.classList.remove('is-active');
+  refs.footerLocation?.classList.remove('is-active');
 }
 
 function bindEvents() {
@@ -639,12 +712,39 @@ function bindEvents() {
   refs.bookingForm.addEventListener('submit', submitBooking);
   refs.resetFlow.addEventListener('click', resetFlow);
   refs.goToBookings.addEventListener('click', () => refs.bookingsDialog.showModal());
+  refs.footerMenu?.addEventListener('click', () => {
+    resetFlow();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  refs.footerSpecialists?.addEventListener('click', async () => {
+    refs.footerMenu?.classList.remove('is-active');
+    refs.footerLocation?.classList.remove('is-active');
+    refs.footerSpecialists?.classList.add('is-active');
+    await loadTeamSpecialists();
+    refs.specialistsDialog?.showModal();
+  });
+  refs.footerLocation?.addEventListener('click', () => {
+    refs.footerMenu?.classList.remove('is-active');
+    refs.footerSpecialists?.classList.remove('is-active');
+    refs.footerLocation?.classList.add('is-active');
+    refs.locationDialog?.showModal();
+  });
   refs.myBookingsTrigger.addEventListener('click', async () => {
     await loadBookings();
     refs.bookingsSuccess.classList.add('is-hidden');
     refs.bookingsDialog.showModal();
   });
   refs.closeBookings.addEventListener('click', () => refs.bookingsDialog.close());
+  refs.closeSpecialists?.addEventListener('click', () => {
+    refs.specialistsDialog?.close();
+    refs.footerSpecialists?.classList.remove('is-active');
+    refs.footerMenu?.classList.add('is-active');
+  });
+  refs.closeLocation?.addEventListener('click', () => {
+    refs.locationDialog?.close();
+    refs.footerLocation?.classList.remove('is-active');
+    refs.footerMenu?.classList.add('is-active');
+  });
   refs.bookingsSuccessClose.addEventListener('click', () => {
     refs.bookingsSuccess.classList.add('is-hidden');
   });
@@ -670,6 +770,24 @@ function bindEvents() {
       refs.cancelDialog?.close();
       refs.bookingsStatus.textContent = error.message;
       refs.bookingsStatus.classList.add('is-error');
+    }
+  });
+  refs.specialistsDialog?.addEventListener('click', (event) => {
+    const rect = refs.specialistsDialog.getBoundingClientRect();
+    const inside = rect.top <= event.clientY && event.clientY <= rect.top + rect.height && rect.left <= event.clientX && event.clientX <= rect.left + rect.width;
+    if (!inside) {
+      refs.specialistsDialog.close();
+      refs.footerSpecialists?.classList.remove('is-active');
+      refs.footerMenu?.classList.add('is-active');
+    }
+  });
+  refs.locationDialog?.addEventListener('click', (event) => {
+    const rect = refs.locationDialog.getBoundingClientRect();
+    const inside = rect.top <= event.clientY && event.clientY <= rect.top + rect.height && rect.left <= event.clientX && event.clientX <= rect.left + rect.width;
+    if (!inside) {
+      refs.locationDialog.close();
+      refs.footerLocation?.classList.remove('is-active');
+      refs.footerMenu?.classList.add('is-active');
     }
   });
 }

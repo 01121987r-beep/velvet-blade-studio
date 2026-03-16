@@ -196,6 +196,17 @@ app.get('/api/client/services', (req, res) => {
   res.json({ services: getServiceCards() });
 });
 
+app.get('/api/client/specialists', (req, res) => {
+  res.json({
+    specialists: db.prepare(`
+      SELECT *
+      FROM specialists
+      WHERE active = 1
+      ORDER BY name ASC
+    `).all()
+  });
+});
+
 app.get('/api/client/services/:id/specialists', (req, res) => {
   const serviceId = Number(req.params.id);
   if (!serviceId) return respondError(res, 400, 'Servizio non valido');

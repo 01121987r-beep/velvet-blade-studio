@@ -137,6 +137,7 @@ export function initializeDatabase() {
   seedAvailability();
   migrateAvailabilityRules();
   migrateServiceIcons();
+  migrateServiceImages();
   seedBookings();
 }
 
@@ -290,6 +291,27 @@ function migrateServiceIcons() {
   const tx = db.transaction(() => {
     for (const [name, icon] of updates) {
       stmt.run(icon, name);
+    }
+  });
+  tx();
+}
+
+function migrateServiceImages() {
+  const updates = [
+    [
+      'Barba Ritual',
+      'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=900&q=80'
+    ],
+    [
+      'Taglio Junior',
+      'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?auto=format&fit=crop&w=900&q=80'
+    ]
+  ];
+
+  const stmt = db.prepare('UPDATE services SET image_url = ? WHERE name = ?');
+  const tx = db.transaction(() => {
+    for (const [name, imageUrl] of updates) {
+      stmt.run(imageUrl, name);
     }
   });
   tx();

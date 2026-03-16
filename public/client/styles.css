@@ -129,7 +129,7 @@ img { display: block; max-width: 100%; }
 .app-shell {
   width: min(100%, 520px);
   margin: 0 auto;
-  padding: 28px 18px 56px;
+  padding: 28px 18px 124px;
 }
 .hero-card,
 .panel,
@@ -257,6 +257,48 @@ img { display: block; max-width: 100%; }
 }
 .service-card,
 .specialist-card { text-align: left; }
+.service-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  min-height: 260px;
+  padding: 20px 16px 18px;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--service-photo);
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.35) contrast(1.05) brightness(0.54);
+  transform: scale(1.02);
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 17, 31, 0.2) 0%, rgba(9, 20, 37, 0.4) 20%, rgba(9, 19, 36, 0.88) 62%, rgba(8, 17, 31, 0.96) 100%),
+    linear-gradient(145deg, rgba(201, 47, 60, 0.22), rgba(47, 95, 168, 0.12));
+}
+
+.service-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.service-card-copy {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  width: 100%;
+  margin-top: 86px;
+}
+
 .service-card.is-active,
 .specialist-card.is-active,
 .booking-card.is-active {
@@ -268,6 +310,11 @@ img { display: block; max-width: 100%; }
 .summary-card h3,
 .booking-card h3 { margin: 8px 0; }
 
+.service-card h3 {
+  margin: 0;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.44);
+}
+
 .service-card h3,
 .specialist-card h3 {
   color: #e8c66a;
@@ -275,36 +322,8 @@ img { display: block; max-width: 100%; }
 
 .service-card .service-meta {
   color: #f2db9d;
-}
-
-.service-icon {
-  width: 64px;
-  height: 46px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 0.96rem;
-  line-height: 1.1;
-  text-align: center;
-  padding: 4px 6px;
-  background:
-    linear-gradient(180deg, rgba(25, 44, 76, 0.98), rgba(15, 29, 53, 0.98)),
-    linear-gradient(135deg, rgba(201, 47, 60, 0.14), rgba(47, 95, 168, 0.12));
-  color: #fff;
-  border: 1px solid rgba(232, 198, 106, 0.44);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 8px 20px rgba(3, 9, 18, 0.24);
-  position: relative;
-}
-
-.service-icon::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  pointer-events: none;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.38);
 }
 
 .icon-combo {
@@ -352,6 +371,11 @@ img { display: block; max-width: 100%; }
 .booking-meta {
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.service-card .muted {
+  color: rgba(255, 250, 243, 0.92);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.32);
 }
 .specialist-top {
   display: grid;
@@ -452,6 +476,136 @@ img { display: block; max-width: 100%; }
 }
 .modal::backdrop { background: rgba(0, 0, 0, 0.55); }
 .modal-card { padding: 22px; }
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 35;
+  width: min(calc(100% - 24px), 520px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(7, 15, 29, 0.9);
+  box-shadow: 0 18px 40px rgba(1, 8, 18, 0.38);
+  backdrop-filter: blur(16px);
+}
+
+.bottom-nav-item {
+  min-height: 56px;
+  padding: 10px 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 250, 243, 0.88);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bottom-nav-item.is-active {
+  background: linear-gradient(135deg, rgba(201, 47, 60, 0.88), rgba(227, 78, 92, 0.98));
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+}
+
+.specialists-directory-list {
+  display: grid;
+  gap: 14px;
+}
+
+.specialist-directory-card {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
+}
+
+.specialist-directory-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.specialist-directory-copy h3 {
+  margin: 0 0 6px;
+  color: #e8c66a;
+}
+
+.location-card {
+  display: grid;
+  gap: 14px;
+}
+
+.location-map {
+  width: 100%;
+  min-height: 240px;
+  border: 0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.location-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.location-address {
+  margin: 0;
+  color: #e8c66a;
+  font-weight: 700;
+}
+#bookings-dialog .modal-card > .section-head {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+#bookings-dialog h2 {
+  color: #e8c66a;
+}
+
+#close-bookings {
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+
+.close-icon-btn {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 47, 60, 0.44);
+  background: linear-gradient(135deg, rgba(201, 47, 60, 0.92), rgba(165, 26, 44, 0.96));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 22px rgba(80, 10, 18, 0.24);
+}
+
+.close-icon-btn:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
 .confirm-card {
   display: grid;
   gap: 14px;
@@ -534,7 +688,7 @@ img { display: block; max-width: 100%; }
 
 .manage-booking-top h3 {
   margin: 8px 0 0;
-  color: var(--text);
+  color: #e8c66a;
 }
 
 .manage-summary {
